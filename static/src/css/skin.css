@@ -253,6 +253,10 @@ h1, h2, h3 {
   margin-top: 0;
 }
 
+.oe_form_field_text textarea {
+	height: auto !important;
+}
+
 textarea:focus, input:focus, select:focus {
 	outline: none;
 }
