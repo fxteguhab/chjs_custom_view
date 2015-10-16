@@ -22,6 +22,7 @@ console.log(descriptor.name, descriptor);
 */
 	
 	var phone_formatting = function(value) {
+		if (!value) return '';
 		var country = value.substring(0,3);
 		var temp = [];
 		var interval = 3;
@@ -37,6 +38,7 @@ console.log(descriptor.name, descriptor);
 	instance.web.form.FieldPhone = instance.web.form.FieldChar.extend({
 		render_value: function() {
 			var value = this.get('value');
+			console.log(value);
 			if (!this.get("effective_readonly")) {
 				this.$el.find('input').val(value);
 			} else {
