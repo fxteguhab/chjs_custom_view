@@ -61,6 +61,18 @@ console.log(descriptor.name, descriptor);
 	
 	instance.web.list.columns.add('field.phone_number', 'instance.web.list.Phone');
 	
+	instance.web.list.EmptyTransparent = instance.web.list.Column.extend({
+		_format: function (row_data, options) {
+			var value = row_data[this.id].value;
+			if (!value) {
+				return '<span style="color: transparent">'+value+'</span>';
+			}
+			return this._super(row_data, options);
+		}
+	});
+	
+	instance.web.list.columns.add('field.empty_transparent', 'instance.web.list.EmptyTransparent');
+	
 	instance.web.CustomFormView = instance.web.FormView.extend({
 	
 	//setelah save (baik create maupun edit), load action tertentu yang disimpan sebagai atribut after_save dari tag <form>
