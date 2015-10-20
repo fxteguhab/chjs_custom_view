@@ -3,23 +3,16 @@ openerp.chjs_custom_view = function(instance) {
 
 	var _t = instance.web._t, _lt = instance.web._lt;
 
-/*
+
 	var old_format_value = instance.web.format_value;
 	
 	instance.web.format_value = function(value, descriptor, value_if_empty) {
-console.log(descriptor.name, descriptor);
-		result = old_format_value(value, descriptor, value_if_empty);
 		switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
-			case 'phone_number':
-				var country = value.substring(0,3);
-				var rest = value.substring(3);
-				result = country + '-' + rest;
-				break
+			case 'float_time':
+				if (value == 0) return '';
 		}
-		return result;
+		return old_format_value(value, descriptor, value_if_empty);
 	}
-	
-*/
 	
 	var phone_formatting = function(value) {
 		if (!value) return '';
