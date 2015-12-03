@@ -7,7 +7,6 @@ openerp.chjs_custom_view = function(instance) {
 	var old_format_value = instance.web.format_value;
 	
 	instance.web.format_value = function(value, descriptor, value_if_empty) {
-console.log(descriptor.name, descriptor);
 		result = old_format_value(value, descriptor, value_if_empty);
 		switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
 			case 'phone_number':
@@ -38,9 +37,12 @@ console.log(descriptor.name, descriptor);
 	instance.web.form.FieldPhone = instance.web.form.FieldChar.extend({
 		render_value: function() {
 			var value = this.get('value');
-			console.log(value);
 			if (!this.get("effective_readonly")) {
-				this.$el.find('input').val(value);
+				if (value) {
+					this.$el.find('input').val(value);
+				} else {
+					this.$el.find('input').val('');
+				}
 			} else {
 				this.$el.text(phone_formatting(value));
 			}
