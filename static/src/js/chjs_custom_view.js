@@ -249,6 +249,34 @@ openerp.chjs_custom_view = function(instance) {
 	
 	instance.web.views.add('list', 'instance.web.CustomListView');
 	
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	instance.web.ListView.List.include({
+		row_clicked: function (event) {
+			if (!this.view.editable() || ! this.view.is_action_enabled('edit')) {
+				return this._super.apply(this, arguments);
+			}
+			var record_id = $(event.currentTarget).data('id');
+			var focus_field = $(event.target).data('field');
+			var is_checkbox = $(event.target).is(':checkbox');
+			if (!focus_field && is_checkbox) focus_field = $(event.target).parent().data('field');
+			var result = this.view.start_edition(
+				record_id ? this.records.get(record_id) : null, {
+				focus_field: focus_field
+			});
+		//juned: kalo dia ngeclick checkbox, langsung aktifkan checkbox nya biar ngga dua kali klik
+			if (is_checkbox) {
+				var initial_checked = $(event.target).get(0).checked;
+				var checkbox = this.view.editor.$el.find("input.field_boolean[name='"+focus_field+"']");
+				this.view.editor.form.fields[focus_field].set_value(initial_checked);
+			}
+			
+			return result;
+		},
+	});
+
+	
 	instance.web.ActionManager = instance.web.ActionManager.extend({
 	
 	//refresh view setelah sebuah wizard melakukan aksinya / diclose
