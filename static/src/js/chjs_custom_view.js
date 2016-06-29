@@ -69,6 +69,17 @@ openerp.chjs_custom_view = function(instance) {
 	
 	instance.web.list.columns.add('field.empty_transparent', 'instance.web.list.EmptyTransparent');
 	
+	instance.web.list.Binary.include({
+		_format: function (row_data, options) {
+		//untuk kolom bertipe binary, link downloadnya pasti harus ke controller yang buat download.
+		//di parent ada if value == " " maka kalau user klik link Download nya maka pergi ke controller 
+		//yang buat download (/web/binary/saveas). Jadi di sini kita sengajain valuenya diisi ' ' alias
+		//single space, supaya if itu masuk.
+			row_data[this.id].value = " "
+			return this._super(row_data, options);
+		}
+	});
+	
 	instance.web.CustomFormView = instance.web.FormView.extend({
 	
 	//setelah save (baik create maupun edit), load action tertentu yang disimpan sebagai atribut after_save dari tag <form>

@@ -1,0 +1,8 @@
+.oe_website_login_container {
+	width: 100%;
+	max-width: 400px;
+}
+
+.oe_website_login_container > form {
+	margin: 20px;
+}
