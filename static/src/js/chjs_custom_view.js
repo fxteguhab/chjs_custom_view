@@ -145,7 +145,7 @@ openerp.chjs_custom_view = function(instance) {
     can_be_discarded: function() {
     	var no_save = this.fields_view.arch.attrs.no_save;
       if (this.$el.is('.oe_form_dirty') && !no_save) {
-        if (!confirm("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?")) {
+        if (!confirm("Warning: the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?")) {
             return false;
         }
         this.$el.removeClass('oe_form_dirty');
