@@ -1,0 +1,30 @@
+<templates id="template" xml:space="preserve">
+		
+	<t t-name="expandable_list_view">
+		<div class="container chjs_website_list_container">
+			<div class="row">
+				<div class="col-md-11">
+					<h1><t t-esc="list_title" /></h1>
+				</div>
+				<div class="col-md-1 mb16 mt16">
+					<button type="button" data-toggle="collapse" data-target="#list_filter_div" class="btn btn-info">Filter <span class="caret"></span></button>
+				</div>
+			</div>
+			<div class="collapse" id="list_filter_div">
+				<div class="row">
+					<div class="col-md-12">
+						<button type="button" id="btn_list_filter" class="btn btn-success btn-block btn-lg">View Data</button>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" id="list_message_container"></div>
+			</div>
+			<div id="data_view_div"></div>
+		</div>
+	</t>
+		
+</templates>
+
+<!--				<t t-att-call="filter_template" />
+-->

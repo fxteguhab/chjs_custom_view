@@ -1,6 +1,6 @@
 
 openerp.chjs_custom_view = function(instance) {
-
+	
 	var _t = instance.web._t, _lt = instance.web._lt;
 
 
@@ -89,7 +89,7 @@ openerp.chjs_custom_view = function(instance) {
 	/*
 		<record ...>
 			<field name="arch" type="xml">
-				<form version="7.0" after_save="jonas.jonas_action_jom_party">
+				<form version="7.0" after_save="jonas.jonas_action_jom_party"> jonas = nama modul, jonas_action_jom_party = XML ID action
 				</form>
 			</field>
 		</record>
@@ -110,7 +110,6 @@ openerp.chjs_custom_view = function(instance) {
 			if (!r) return this._super(r);
 			var after_save = this.fields_view.arch.attrs.after_save; //self.fields_view.arch ftw!!
 			if (after_save && after_save != '') {
-				alert(after_save);
 				this.ViewManager.ActionManager.do_action(this.fields_view.arch.attrs.after_save,{
 					clear_breadcrumbs: true
 				});
@@ -131,7 +130,7 @@ openerp.chjs_custom_view = function(instance) {
 			</field>
 		</record>
 	*/
-	//juga memungkinkan untuk mengubah label save. Cara pemakaian:
+	//juga memungkinkan untuk mengubah label button save. Cara pemakaian:
 	/*
 		<record ...>
 			<field name="arch" type="xml">
@@ -142,37 +141,76 @@ openerp.chjs_custom_view = function(instance) {
 	*/
 		load_form: function(data) {
 			result = this._super(data);
-    	var no_save = this.fields_view.arch.attrs.no_save;
-    	if (no_save) {
-    		$('.oe_form_buttons').remove();
-    	}
-    	var save_label = this.fields_view.arch.attrs.save_label;
-    	if (save_label) {
-    		$('.oe_form_buttons .oe_form_button_save').html(_t(save_label));
-    	}
+			var no_save = this.fields_view.arch.attrs.no_save;
+			if (no_save) {
+				$('.oe_form_buttons').remove();
+			}
+			var save_label = this.fields_view.arch.attrs.save_label;
+			if (save_label) {
+				$('.oe_form_buttons .oe_form_button_save').html(_t(save_label));
+			}
 			return result;
 		},
 		
-    can_be_discarded: function() {
-    	var no_save = this.fields_view.arch.attrs.no_save;
-      if (this.$el.is('.oe_form_dirty') && !no_save) {
-        if (!confirm("Warning: the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?")) {
-            return false;
-        }
-        this.$el.removeClass('oe_form_dirty');
-      }
-      return true;
-    },
-    
-  //untuk form2 yang langsung diakses dari menu (bukan button Create atau Edit), yang muncul 
-  //di title hanyalah "New", sehingga kurang informatif. code di bawah memungkinkan supaya yang muncul
-  //adalah name dari action yang diacu oleh menu tersebut.
+		can_be_discarded: function() {
+			var no_save = this.fields_view.arch.attrs.no_save;
+			if (this.$el.is('.oe_form_dirty') && !no_save) {
+				if (!confirm("Warning: the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?")) {
+						return false;
+				}
+				this.$el.removeClass('oe_form_dirty');
+			}
+			return true;
+		},
+		
+	//untuk form2 yang langsung diakses dari menu (bukan button Create atau Edit), yang muncul 
+	//di title hanyalah "New", sehingga kurang informatif. code di bawah memungkinkan supaya yang muncul
+	//adalah name dari action yang diacu oleh menu tersebut.
 		load_record: function(record) {
-    	var new_title = this.options.action.name;
+			var new_title = this.options.action.name;
 			result = this._super(record);
 			this.set({ 'title' : record.id ? record.display_name : (new_title ? _t(new_title) : _t("New")) });
 			return result;
 		},
+
+	//kalau pengen supaya nilai field readonly tetap ikut disubmit. Cara pemakaian:
+	/*
+		<record ...>
+			<field name="arch" type="xml">
+				<form version="7.0">
+					...
+					<field name="customer_name" readonly_force_submit="1" />
+				</form>
+			</field>
+		</record>
+	*/
+	//untuk field o2m, kondisikan supaya field o2m nya itu sendiri JANGAN readonly. Meskipun field2 
+	//di bawah <tree> nya readonly (baik readonly dari modelnya maupun menggunakan attrs/readonly di view), 
+	//ketika disubmit field2 readonly tersebut akan tetap diikutsertakan.
+
+		_process_save: function(save_obj) {
+			var self = this;
+			var prepend_on_create = save_obj.prepend_on_create;
+		
+			for (var f in self.fields) {
+				var tmp = f;
+				if (!self.fields.hasOwnProperty(f)) { continue; }
+				f = self.fields[f];
+				if (f.node.attrs.readonly_force_submit) {
+					self.fields[tmp].set('readonly',false,{silent: true});
+				}
+			}
+			return this._super(save_obj);
+
+		},
+	
+	//mampukan supaya onchange bisa membawa current values of the form ke server, ke method onchange yang menghandlenya
+	//di server. current values ini ditangkap di parameter context si method handler
+		do_onchange: function(widget) {
+			this.dataset._model._context['onchange_values'] = this._get_onchange_values();
+			return this._super(widget);
+		}
+
 		
 	});
 	
@@ -207,7 +245,7 @@ openerp.chjs_custom_view = function(instance) {
 			});
 		},
 		
-	//enable fasilitas untuk mengubah label save. Cara pemakaian:
+	//enable fasilitas untuk mengubah label button Create. Cara pemakaian:
 	/*
 		<record ...>
 			<field name="arch" type="xml">
@@ -262,7 +300,10 @@ openerp.chjs_custom_view = function(instance) {
 	
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	
+	/*
+	Memungkinkan supaya kalau ada checkbox di list o2m user ngga harus klik dua kali buat check/uncheck
+	Anda tidak perlu menambah apapun di kode, sudah otomatis.
+	*/
 	instance.web.ListView.List.include({
 		row_clicked: function (event) {
 			if (!this.view.editable() || ! this.view.is_action_enabled('edit')) {
@@ -276,7 +317,6 @@ openerp.chjs_custom_view = function(instance) {
 				record_id ? this.records.get(record_id) : null, {
 				focus_field: focus_field
 			});
-		//juned: kalo dia ngeclick checkbox, langsung aktifkan checkbox nya biar ngga dua kali klik
 			if (is_checkbox) {
 				var initial_checked = $(event.target).get(0).checked;
 				var checkbox = this.view.editor.$el.find("input.field_boolean[name='"+focus_field+"']");
@@ -326,39 +366,6 @@ openerp.chjs_custom_view = function(instance) {
 			this.context.__contexts[0] = this.parent_view.dataset.context;
 			return this.context;
 		}
-	});
-	
-	instance.web.form.FieldMany2One = instance.web.form.FieldMany2One.extend({
-	//menghapus option Create and Edit dan Create *beep* dari hasil pencarian
-	//tambahkan atribut no_create="1" di <field> many2one yang mana dua opsi itu mau diilangin 
-	//contoh pemakaian:
-	/*
-		<form...>
-			<field name="level_id" no_create="1" />
-		</form>
-	*/
-		render_editable: function() {
-			this._super();
-			var self = this;
-			var no_create = this.node.attrs['no_create'];
-			this.$input.autocomplete({
-				source: function(req, resp) {
-					self.get_search_result(req.term).done(function(result) {
-						if (no_create) {
-							var new_result = [];
-							$.each(result, function() {
-								if (!(typeof this.action == "function" && this.label.indexOf("Create") === 0)) {
-									new_result.push(this);
-								}
-							});
-							resp(new_result);
-						} else {
-							resp(result);
-						}
-					});
-				},
-			})
-		},
 	});
 	
 }
