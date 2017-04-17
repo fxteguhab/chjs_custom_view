@@ -166,11 +166,30 @@ openerp.chjs_custom_view = function(instance) {
 	//untuk form2 yang langsung diakses dari menu (bukan button Create atau Edit), yang muncul 
 	//di title hanyalah "New", sehingga kurang informatif. code di bawah memungkinkan supaya yang muncul
 	//adalah name dari action yang diacu oleh menu tersebut.
+	/*
+		tambahan, dengan mengisi option di field yang punya onchange, maka dalam kondisi editing 
+		onchange nya tetep ditrigger. Ini adalah modifikasi dari behaviour standar Odoo di mana bila form 
+		digunakan untuk mengedit maka begitu form beres diload onchange2 field TIDAK ditrigger.
+		Cara pakai:
+
+			<form>
+				<field name="customer_id" on_change="blabla" options="{'force_onchange': 1}"
+			</form>
+	*/
 		load_record: function(record) {
+			var self = this;
 			var new_title = this.options.action.name;
 			result = this._super(record);
 			this.set({ 'title' : record.id ? record.display_name : (new_title ? _t(new_title) : _t("New")) });
-			return result;
+			return result.then(function() {
+				if (record.id) {
+					_.each(self.fields, function(spec, name) {
+						if (spec.options.force_onchange == 1) {
+							self.do_onchange(spec);
+						}
+					});
+				}
+			});
 		},
 
 	//kalau pengen supaya nilai field readonly tetap ikut disubmit. Cara pemakaian:
