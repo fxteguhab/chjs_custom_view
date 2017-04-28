@@ -11,3 +11,7 @@
 	word-wrap: break-word;
 	max-width: 300px;
 }
+
+.year_spinner_previous, .year_spinner_next {
+	cursor: pointer;
+}

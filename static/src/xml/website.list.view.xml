@@ -23,8 +23,6 @@
 			<div id="data_view_div"></div>
 		</div>
 	</t>
-		
+
 </templates>
 
-<!--				<t t-att-call="filter_template" />
--->

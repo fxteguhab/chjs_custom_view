@@ -19,6 +19,9 @@
 	],
 	'update_xml': [
 	],
+	'qweb': [
+		'static/src/xml/chjs.view.year.spinner.xml',
+	],
 	'installable': True,
 	'auto_install': True,
 }
