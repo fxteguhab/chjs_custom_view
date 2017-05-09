@@ -80,6 +80,74 @@ openerp.chjs_custom_view = function(instance) {
 		}
 	});
 	
+	instance.web.ComboCheckBox = instance.web.Widget.extend({
+		template: 'chjs_custom_view.combo_checkbox',
+		events: {
+			'click .dropdown-menu div': 'onclick_combo_checkbox_menu',
+		},
+		
+		options: [],
+		option_selection: [],
+		
+		init: function(that, option_selection) {
+			this._super(that);
+			this.option_selection = option_selection;
+			/*
+			var ul = that.$('.dropdown-menu');
+			var i;
+			for (i=0; i<this.option_selection.length; i++) {
+				ul.append('<li><div value="' + this.option_selection[i]['value'] + 
+							'"><input type="checkbox"/>' + this.option_selection[i]['text'] + '</div></li>');
+			}
+			*/
+		},
+		
+		start: function() {
+			var ul = this.$('.dropdown-menu');
+			var i;
+			for (i=0; i<this.option_selection.length; i++) {
+				ul.append('<li><div value="' + this.option_selection[i]['value'] + 
+							'"><input type="checkbox"/>' + this.option_selection[i]['text'] + '</div></li>');
+			}
+		},
+
+		onclick_combo_checkbox_menu: function(event) {
+			var $target = $(event.currentTarget),
+				val = $target.attr('value'),
+				$inp = $target.find('input'),
+				idx;
+
+			if ((idx = this.options.indexOf(val)) > -1) {
+				this.options.splice(idx, 1);
+				setTimeout(function() {$inp.prop('checked', false)}, 0);
+			} else {
+				this.options.push(val);
+				setTimeout(function() {$inp.prop('checked', true)}, 0);
+			}
+
+			var i,j;
+			var option_string = '';
+			for (i=0; i<this.options.length; i++) {
+				for (j=0; j<this.option_selection.length; j++) {
+					if (this.options[i] === this.option_selection[j]['value']) {
+						option_string += this.option_selection[j]['text']
+					}
+				}
+				if(i+1<this.options.length) {
+					option_string += ', ';
+				}
+			}
+
+			if(option_string !== '') {
+				$(".combo_checkbox_text").html(option_string);
+			} else {
+				$(".combo_checkbox_text").html('Select');
+			}
+
+			return false;
+		}, 
+	});
+	
 	instance.web.YearSpinnerWidget = instance.web.Widget.extend({
 		template: 'chjs_custom_view.year_spinner',
 		events: {

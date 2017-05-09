@@ -1,0 +1,13 @@
+<template>
+		
+	<t t-name="chjs_custom_view.combo_checkbox">
+		<div class="dropdown">
+			<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+				<div style="float:left;" class="combo_checkbox_text">Select</div>
+				<div style="float:right; margin-left:5px;" class="glyphicon glyphicon-chevron-down"></div>
+			</button>
+			<ul class="dropdown-menu"></ul>
+		</div>
+	</t>
+
+</template>

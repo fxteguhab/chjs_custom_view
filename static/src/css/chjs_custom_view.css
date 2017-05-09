@@ -15,3 +15,11 @@
 .year_spinner_previous, .year_spinner_next {
 	cursor: pointer;
 }
+
+.combo_checkbox_text {
+	width: 100px;
+	max-width: 100px;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
