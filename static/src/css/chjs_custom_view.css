@@ -28,6 +28,10 @@
 }
 */
 
+.full-width {
+	width: 100%;
+}
+
 .no-margin {
 	margin: 0px;
 }
@@ -38,4 +42,16 @@
 
 .no-border {
 	border: 0px;
+}
+
+.arrow {
+	width: 10%;
+}
+
+.month {
+	width: 50%;
+}
+
+.year {
+	width: 30%;
 }
