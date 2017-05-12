@@ -97,7 +97,31 @@ openerp.chjs_custom_view = function(instance) {
 			var i;
 			for (i=0; i<this.option_selection.length; i++) {
 				ul.append('<li><div value="' + this.option_selection[i]['value'] + 
-							'"><input type="checkbox"/>' + this.option_selection[i]['text'] + '</div></li>');
+							'"><input type="checkbox" ' + 
+							(this.option_selection[i]['checked']?'checked':'')
+							+ '/>' + this.option_selection[i]['text'] + '</div></li>');
+				if(this.option_selection[i]['checked']) {
+					this.option_selected.push(this.option_selection[i]['value']);
+				}
+			}
+			
+			var i,j;
+			var option_string = '';
+			for (i=0; i<this.option_selected.length; i++) {
+				for (j=0; j<this.option_selection.length; j++) {
+					if (this.option_selected[i] === this.option_selection[j]['value']) {
+						option_string += this.option_selection[j]['text']
+					}
+				}
+				if(i+1<this.option_selected.length) {
+					option_string += ', ';
+				}
+			}
+
+			if(option_string !== '') {
+				this.$(".combo_checkbox_text").html(option_string);
+			} else {
+				this.$(".combo_checkbox_text").html('Select');
 			}
 		},
 
@@ -133,6 +157,8 @@ openerp.chjs_custom_view = function(instance) {
 			} else {
 				this.$(".combo_checkbox_text").html('Select');
 			}
+			
+			this.set("condition", val);
 
 			return false;
 		}, 
