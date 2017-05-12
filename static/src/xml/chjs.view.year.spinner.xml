@@ -10,22 +10,26 @@
 
 	<t t-name="chjs_custom_view.month_year_spinner">
 		<div class="input-group">
-			<span class="year_spinner_previous input-group-addon fa fa-chevron-left" />
-			<select id="selection_month" class="year_spinner_month form-control center">
-				<option value="01">January</option>
-				<option value="02">February</option>
-				<option value="03">March</option>
-				<option value="04">April</option>
-				<option value="05">May</option>
-				<option value="06">June</option>
-				<option value="07">July</option>
-				<option value="08">August</option>
-				<option value="09">September</option>
-				<option value="10">October</option>
-				<option value="11">November</option>
-				<option value="12">December</option>
-			</select>
-			<input type="number" class="year_spinner_year form-control center" />
+			<span class="year_spinner_previous input-group-addon fa fa-chevron-left input-group-addon" />
+			<span class="input-group-addon">
+				<select id="selection_month" class="year_spinner_month form-control center">
+					<option value="01">January</option>
+					<option value="02">February</option>
+					<option value="03">March</option>
+					<option value="04">April</option>
+					<option value="05">May</option>
+					<option value="06">June</option>
+					<option value="07">July</option>
+					<option value="08">August</option>
+					<option value="09">September</option>
+					<option value="10">October</option>
+					<option value="11">November</option>
+					<option value="12">December</option>
+				</select>
+			</span>
+			<span class="input-group-addon">
+				<input type="number" class="year_spinner_year form-control center" />
+			</span>
 			<span class="year_spinner_next input-group-addon fa fa-chevron-right" />
 		</div>
 	</t>
