@@ -22,6 +22,20 @@
 	text-overflow: ellipsis;
 }
 
-.input_group_addons_width{
-	width : 0%;
+/*
+.input_group_addons_width {
+	width: 0%;
+}
+*/
+
+.no-margin {
+	margin: 0px;
+}
+
+.no-padding {
+	padding: 0px;
+}
+
+.no-border {
+	border: 0px;
 }
