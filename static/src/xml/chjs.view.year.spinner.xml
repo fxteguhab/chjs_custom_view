@@ -9,10 +9,10 @@
 	</t>
 
 	<t t-name="chjs_custom_view.month_year_spinner">
-		<div class="input-group">
-			<span class="year_spinner_previous fa fa-chevron-left input-group-addon input_group_addons_width"/>
-			<span class="input-group-addon input_group_addons_width">
-				<select id="selection_month" class="year_spinner_month form-control center">
+		<div class="row input-group no-margin full-width">
+			<span class="arrow year_spinner_previous fa fa-chevron-left input-group-addon"/>
+			<span class="month input-group-addon no-margin no-padding no-border">
+				<select id="selection_month" class="year_spinner_month form-control center no-border">
 					<option value="01">January</option>
 					<option value="02">February</option>
 					<option value="03">March</option>
@@ -27,10 +27,10 @@
 					<option value="12">December</option>
 				</select>
 			</span>
-			<span class="input-group-addon input_group_addons_width">
+			<span class="year input-group-addon no-margin no-padding no-border">
 				<input type="number" class="year_spinner_year form-control center" />
 			</span>
-			<span class="year_spinner_next input-group-addon fa fa-chevron-right input_group_addons_width"/>
+			<span class="arrow year_spinner_next input-group-addon fa fa-chevron-right"/>
 		</div>
 	</t>
 
