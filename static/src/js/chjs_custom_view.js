@@ -90,11 +90,15 @@ openerp.chjs_custom_view = function(instance) {
 			this._super(that);
 			this.option_selection = option_selection;
 			this.option_selected = [];
+			
+		// untuk kondisi onchange gunakan value ini
+			this.set("clicked", false);
 		},
 		
 		start: function() {
 			var ul = this.$('.dropdown-menu');
 			var i;
+			var option_string = '';
 			for (i=0; i<this.option_selection.length; i++) {
 				ul.append('<li><div value="' + this.option_selection[i]['value'] + 
 							'"><input type="checkbox" ' + 
@@ -102,22 +106,14 @@ openerp.chjs_custom_view = function(instance) {
 							+ '/>' + this.option_selection[i]['text'] + '</div></li>');
 				if(this.option_selection[i]['checked']) {
 					this.option_selected.push(this.option_selection[i]['value']);
+					
+					option_string += this.option_selection[i]['text']
+					if(i +1 <this.option_selection.length) {
+						option_string += ', ';
+					}
 				}
 			}
 			
-			var i,j;
-			var option_string = '';
-			for (i=0; i<this.option_selected.length; i++) {
-				for (j=0; j<this.option_selection.length; j++) {
-					if (this.option_selected[i] === this.option_selection[j]['value']) {
-						option_string += this.option_selection[j]['text']
-					}
-				}
-				if(i+1<this.option_selected.length) {
-					option_string += ', ';
-				}
-			}
-
 			if(option_string !== '') {
 				this.$(".combo_checkbox_text").html(option_string);
 			} else {
@@ -158,6 +154,10 @@ openerp.chjs_custom_view = function(instance) {
 				this.$(".combo_checkbox_text").html('Select');
 			}
 			
+		// untuk kondisi onchange gunakan value "clicked", 
+		// tidak dapat menggunakan condition karena apabila condition sebelumnya misal bernilai x, ketika di click, condition ttp bernilai x, maka onchange tidak akan terpanggil
+		// karena tidak ada perubahan nilai pada condition
+			this.set("clicked", !this.get("clicked"));
 			this.set("condition", val);
 
 			return false;
@@ -175,6 +175,10 @@ openerp.chjs_custom_view = function(instance) {
 		set_today: function() {
 			var default_year = new Date().getFullYear();
 			this.set("year", default_year);
+		},
+		
+		set_year_by_param: function(year) {
+			this.set("year", year);
 		},
 
 		onchange_year: function(event) {
@@ -216,6 +220,14 @@ openerp.chjs_custom_view = function(instance) {
 			default_month = "" + default_month; //supaya jadi string
 			default_month = pad.substring(0, pad.length - default_month.length) + default_month;
 			this.set("month_year",default_year+'-'+default_month);
+		},
+		
+		set_month_year_by_param: function(month, year) {
+		//supaya kalau default month 1 (integer) maka diubah jadi "01" (string)
+			var pad = "00";
+			default_month = "" + month; //supaya jadi string
+			default_month = pad.substring(0, pad.length - default_month.length) + month;
+			this.set("month_year",year+'-'+default_month);
 		},
 
 		onchange_month_year: function(event) {
