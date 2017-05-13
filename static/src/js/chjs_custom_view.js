@@ -90,9 +90,7 @@ openerp.chjs_custom_view = function(instance) {
 			this._super(that);
 			this.option_selection = option_selection;
 			this.option_selected = [];
-			
-		// untuk kondisi onchange gunakan value ini
-			this.set("clicked", false);
+			this.set("is_click", false);
 		},
 		
 		start: function() {
@@ -154,12 +152,18 @@ openerp.chjs_custom_view = function(instance) {
 				this.$(".combo_checkbox_text").html('Select');
 			}
 			
-		// untuk kondisi onchange gunakan value "clicked", 
-		// tidak dapat menggunakan condition karena apabila condition sebelumnya misal bernilai x, ketika di click, condition ttp bernilai x, maka onchange tidak akan terpanggil
-		// karena tidak ada perubahan nilai pada condition
-			this.set("clicked", !this.get("clicked"));
+					
+		// "condition" untuk mengetahui checkbox mana yang di click
 			this.set("condition", val);
-
+		
+		// "list_value" untuk mendapatkan isi list nilai yang checked
+			this.set("list_value", this.option_selected);
+			
+		// untuk kondisi onchange gunakan value "is_click", 
+		// tidak dapat menggunakan condition karena apabila condition sebelumnya misal bernilai x, ketika di click, condition ttp bernilai x, maka onchange tidak akan terpanggil
+		// karena tidak ada perubahan nilai pada condition, tidak dapat juga menggunakan list_value karena pointer array (nilai pointer akan selalu sama walaupun isinya berubah)
+			this.set("is_click", !this.get("is_click"));
+			
 			return false;
 		}, 
 	});
