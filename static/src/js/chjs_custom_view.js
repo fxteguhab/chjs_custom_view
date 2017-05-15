@@ -86,8 +86,9 @@ openerp.chjs_custom_view = function(instance) {
 			'click .dropdown-menu div': 'onclick_combo_checkbox_menu',
 		},
 		
-		init: function(that, option_selection) {
+		init: function(that, title, option_selection) {
 			this._super(that);
+			this.title = title;
 			this.option_selection = option_selection;
 			this.option_selected = [];
 			this.set("is_click", false);
@@ -111,11 +112,14 @@ openerp.chjs_custom_view = function(instance) {
 					}
 				}
 			}
-			
-			if(option_string !== '') {
-				this.$(".combo_checkbox_text").html(option_string);
+			if(!this.title) {
+				if(option_string !== '') {
+					this.$(".combo_checkbox_text").html(option_string);
+				} else {
+					this.$(".combo_checkbox_text").html('Select');
+				}
 			} else {
-				this.$(".combo_checkbox_text").html('Select');
+				this.$(".combo_checkbox_text").html(this.title);
 			}
 		},
 
@@ -133,25 +137,26 @@ openerp.chjs_custom_view = function(instance) {
 				setTimeout(function() {$inp.prop('checked', true)}, 0);
 			}
 
-			var i,j;
-			var option_string = '';
-			for (i=0; i<this.option_selected.length; i++) {
-				for (j=0; j<this.option_selection.length; j++) {
-					if (this.option_selected[i] === this.option_selection[j]['value']) {
-						option_string += this.option_selection[j]['text']
+			if(!this.title) {
+				var i,j;
+				var option_string = '';
+				for (i=0; i<this.option_selected.length; i++) {
+					for (j=0; j<this.option_selection.length; j++) {
+						if (this.option_selected[i] === this.option_selection[j]['value']) {
+							option_string += this.option_selection[j]['text']
+						}
+					}
+					if(i+1<this.option_selected.length) {
+						option_string += ', ';
 					}
 				}
-				if(i+1<this.option_selected.length) {
-					option_string += ', ';
+
+				if(option_string !== '') {
+					this.$(".combo_checkbox_text").html(option_string);
+				} else {
+					this.$(".combo_checkbox_text").html('Select');
 				}
 			}
-
-			if(option_string !== '') {
-				this.$(".combo_checkbox_text").html(option_string);
-			} else {
-				this.$(".combo_checkbox_text").html('Select');
-			}
-			
 					
 		// "condition" untuk mengetahui checkbox mana yang di click
 			this.set("condition", val);
