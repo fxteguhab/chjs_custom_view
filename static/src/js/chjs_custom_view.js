@@ -90,11 +90,15 @@ openerp.chjs_custom_view = function(instance) {
 			this._super(that);
 			this.title = title;
 			this.option_selection = option_selection;
-			this.option_selected = [];
 			this.set("is_click", false);
 		},
 		
 		start: function() {
+			this.option_selected = [];
+			this.set("is_click", false);
+			this.set("condition", null);
+			this.set("list_value", this.option_selected);
+			
 			var ul = this.$('.dropdown-menu');
 			var i;
 			var option_string = '';
