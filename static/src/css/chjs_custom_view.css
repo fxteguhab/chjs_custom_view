@@ -15,3 +15,43 @@
 .year_spinner_previous, .year_spinner_next {
 	cursor: pointer;
 }
+
+.combo_checkbox_text {
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/*
+.input_group_addons_width {
+	width: 0%;
+}
+*/
+
+.full-width {
+	width: 100%;
+}
+
+.no-margin {
+	margin: 0px;
+}
+
+.no-padding {
+	padding: 0px;
+}
+
+.no-border {
+	border: 0px;
+}
+
+.arrow {
+	width: 10%;
+}
+
+.month {
+	width: 50%;
+}
+
+.year {
+	width: 30%;
+}

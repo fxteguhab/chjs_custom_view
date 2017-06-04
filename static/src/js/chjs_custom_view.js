@@ -80,7 +80,209 @@ openerp.chjs_custom_view = function(instance) {
 		}
 	});
 	
+	instance.web.ComboCheckBox = instance.web.Widget.extend({
+		template: 'chjs_custom_view.combo_checkbox',
+		events: {
+			'click .dropdown-menu div': 'onclick_combo_checkbox_menu',
+		},
+		
+		init: function(that, title, option_selection) {
+			this._super(that);
+			this.title = title;
+			this.option_selection = option_selection;
+			this.set("is_click", false);
+		},
+		
+		start: function() {
+			this.option_selected = [];
+			this.set("is_click", false);
+			this.set("condition", null);
+			this.set("list_value", this.option_selected);
+			
+			var ul = this.$('.dropdown-menu');
+			var i;
+			var option_string = '';
+			for (i=0; i<this.option_selection.length; i++) {
+				ul.append('<li><div value="' + this.option_selection[i]['value'] + 
+							'"><input type="checkbox" ' + 
+							(this.option_selection[i]['checked']?'checked':'')
+							+ '/>' + this.option_selection[i]['text'] + '</div></li>');
+				if(this.option_selection[i]['checked']) {
+					this.option_selected.push(this.option_selection[i]['value']);
+					
+					option_string += this.option_selection[i]['text']
+					if(i +1 <this.option_selection.length) {
+						option_string += ', ';
+					}
+				}
+			}
+			if(!this.title) {
+				if(option_string !== '') {
+					this.$(".combo_checkbox_text").html(option_string);
+				} else {
+					this.$(".combo_checkbox_text").html('Select');
+				}
+			} else {
+				this.$(".combo_checkbox_text").html(this.title);
+			}
+		},
+
+		onclick_combo_checkbox_menu: function(event) {
+			var $target = this.$(event.currentTarget),
+				val = $target.attr('value'),
+				$inp = $target.find('input'),
+				idx;
+				
+			if ((idx = this.option_selected.indexOf(val)) > -1) {
+				this.option_selected.splice(idx, 1);
+				setTimeout(function() {$inp.prop('checked', false)}, 0);
+			} else {
+				this.option_selected.push(val);
+				setTimeout(function() {$inp.prop('checked', true)}, 0);
+			}
+
+			if(!this.title) {
+				var i,j;
+				var option_string = '';
+				for (i=0; i<this.option_selected.length; i++) {
+					for (j=0; j<this.option_selection.length; j++) {
+						if (this.option_selected[i] === this.option_selection[j]['value']) {
+							option_string += this.option_selection[j]['text']
+						}
+					}
+					if(i+1<this.option_selected.length) {
+						option_string += ', ';
+					}
+				}
+
+				if(option_string !== '') {
+					this.$(".combo_checkbox_text").html(option_string);
+				} else {
+					this.$(".combo_checkbox_text").html('Select');
+				}
+			}
+					
+		// "condition" untuk mengetahui checkbox mana yang di click
+			this.set("condition", val);
+		
+		// "list_value" untuk mendapatkan isi list nilai yang checked
+			this.set("list_value", this.option_selected);
+			
+		// untuk kondisi onchange gunakan value "is_click", 
+		// tidak dapat menggunakan condition karena apabila condition sebelumnya misal bernilai x, ketika di click, condition ttp bernilai x, maka onchange tidak akan terpanggil
+		// karena tidak ada perubahan nilai pada condition, tidak dapat juga menggunakan list_value karena pointer array (nilai pointer akan selalu sama walaupun isinya berubah)
+			this.set("is_click", !this.get("is_click"));
+			
+			return false;
+		}, 
+	});
 	
+	instance.web.YearSpinnerWidget = instance.web.Widget.extend({
+		template: 'chjs_custom_view.year_spinner',
+		events: {
+			'click .year_spinner_previous': 'onchange_year',
+			'click .year_spinner_next': 'onchange_year',
+			'change .year_spinner_year': 'onchange_year',
+		},
+
+		set_today: function() {
+			var default_year = new Date().getFullYear();
+			this.set("year", default_year);
+		},
+		
+		set_year_by_param: function(year) {
+			this.set("year", year);
+		},
+
+		onchange_year: function(event) {
+			event.stopPropagation();
+			var target = $(event.target);
+			var current_year = this.get('year');
+			if (target.is('.year_spinner_previous')) {
+				current_year = current_year - 1;
+			} else if (target.is('.year_spinner_next')) {
+				current_year = current_year + 1;
+			} else if (target.is('.year_spinner_year')) {
+				current_year = parseInt(target.val());
+			}
+			this.set("year", current_year);
+		},
+
+		set: function(arg1, arg2, arg3) {
+			this._super(arg1, arg2, arg3);
+			var year_input = this.$('.year_spinner_year');
+			year_input.val(this.get("year"));
+		},
+	});
+
+	instance.web.MonthYearSpinnerWidget = instance.web.Widget.extend({
+		template: 'chjs_custom_view.month_year_spinner',
+		events: {
+			'click .year_spinner_previous': 'onchange_month_year',
+			'click .year_spinner_next': 'onchange_month_year',
+			'change .year_spinner_year': 'onchange_month_year',
+			'change .year_spinner_month': 'onchange_month_year',
+		},
+
+		set_today: function() {
+			var now = new Date();
+			var default_year = now.getFullYear();
+			var default_month = now.getMonth() + 1;
+		//supaya kalau default month 1 (integer) maka diubah jadi "01" (string)
+			var pad = "00";
+			default_month = "" + default_month; //supaya jadi string
+			default_month = pad.substring(0, pad.length - default_month.length) + default_month;
+			this.set("month_year",default_year+'-'+default_month);
+		},
+		
+		set_month_year_by_param: function(month, year) {
+		//supaya kalau default month 1 (integer) maka diubah jadi "01" (string)
+			var pad = "00";
+			default_month = "" + month; //supaya jadi string
+			default_month = pad.substring(0, pad.length - default_month.length) + month;
+			this.set("month_year",year+'-'+default_month);
+		},
+
+		onchange_month_year: function(event) {
+			event.stopPropagation();
+			var target = $(event.target);
+			var current_month_year = this.get('month_year');
+			var temp = current_month_year.split("-");
+			var current_month = parseInt(temp[1]);
+			var current_year = parseInt(temp[0]);
+			if (target.is('.year_spinner_previous')) {
+				current_month -= 1;
+				if (current_month <= 0) {
+					current_year -= 1;
+					current_month = 12;
+				}
+			} else if (target.is('.year_spinner_next')) {
+				current_month += 1;
+				if (current_month >= 13) {
+					current_year += 1;
+					current_month = 1;
+				}
+			} else if (target.is('.year_spinner_year')) {
+				current_year = parseInt(target.val());
+			} else if (target.is('.year_spinner_month')) {
+				current_month = parseInt(target.val());
+			}
+			var pad = "00";
+			current_month = "" + current_month; //supaya jadi string
+			current_month = pad.substring(0, pad.length - current_month.length) + current_month;
+			this.set("month_year",current_year+'-'+current_month);
+		},
+
+		set: function(arg1, arg2, arg3) {
+			this._super(arg1, arg2, arg3);
+			var year_input = this.$('.year_spinner_year');
+			var month_input = this.$('.year_spinner_month');
+			var current_month_year = this.get('month_year');
+			var temp = current_month_year.split("-");
+			year_input.val(temp[0]);
+			month_input.val(temp[1]);
+		},
+	});
 
 	instance.web.CustomFormView = instance.web.FormView.extend({
 	

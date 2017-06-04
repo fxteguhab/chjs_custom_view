@@ -21,6 +21,7 @@
 	],
 	'qweb': [
 		'static/src/xml/month_year_spinner.xml',
+		'static/src/xml/chjs.view.combo.checkbox.xml',
 	],
 	'installable': True,
 	'auto_install': True,
