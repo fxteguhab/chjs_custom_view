@@ -7,6 +7,7 @@
 			<xpath expr="." position="inside">
 				<link rel="stylesheet" href="/chjs_custom_view/static/src/css/chjs_custom_view.css" />
 				<link rel="stylesheet" href="/chjs_custom_view/static/src/css/skin.css" />
+				<script type="text/javascript" src="/chjs_custom_view/static/src/js/month_year_spinner.js"></script>
 				<script type="text/javascript" src="/chjs_custom_view/static/src/js/chjs_custom_view.js"></script>
 			</xpath>
 		</template>
